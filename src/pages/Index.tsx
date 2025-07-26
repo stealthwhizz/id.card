@@ -18,7 +18,73 @@ interface BusinessCardData {
   website: string;
   address: string;
   theme: string;
+  backgroundPattern: string;
 }
+
+const backgroundPatterns = {
+  none: {
+    name: 'None',
+    style: {}
+  },
+  dots: {
+    name: 'Dots',
+    style: {
+      backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
+      backgroundSize: '20px 20px'
+    }
+  },
+  grid: {
+    name: 'Grid',
+    style: {
+      backgroundImage: `
+        linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+      `,
+      backgroundSize: '20px 20px'
+    }
+  },
+  diagonal: {
+    name: 'Diagonal Lines',
+    style: {
+      backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 12px)'
+    }
+  },
+  hexagon: {
+    name: 'Hexagons',
+    style: {
+      backgroundImage: `
+        radial-gradient(circle at 25% 25%, transparent 50%, rgba(255,255,255,0.05) 50%),
+        radial-gradient(circle at 75% 75%, transparent 50%, rgba(255,255,255,0.05) 50%)
+      `,
+      backgroundSize: '30px 30px'
+    }
+  },
+  waves: {
+    name: 'Waves',
+    style: {
+      backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(255,255,255,0.1) 15px, rgba(255,255,255,0.1) 20px)',
+      backgroundSize: '40px 40px'
+    }
+  },
+  circuit: {
+    name: 'Circuit',
+    style: {
+      backgroundImage: `
+        linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 2px, transparent 2px)
+      `,
+      backgroundSize: '25px 25px, 25px 25px, 50px 50px'
+    }
+  },
+  subtle: {
+    name: 'Subtle Texture',
+    style: {
+      backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0)',
+      backgroundSize: '15px 15px'
+    }
+  }
+};
 
 const themes = {
   classic: {
@@ -104,7 +170,8 @@ export default function BusinessCardGenerator() {
     email: 'john.doe@example.com',
     website: 'www.johndoe.com',
     address: '123 Tech Street, Silicon Valley, CA',
-    theme: 'classic'
+    theme: 'classic',
+    backgroundPattern: 'none'
   });
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -154,6 +221,7 @@ export default function BusinessCardGenerator() {
   };
 
   const currentTheme = themes[cardData.theme as keyof typeof themes];
+  const currentPattern = backgroundPatterns[cardData.backgroundPattern as keyof typeof backgroundPatterns];
 
   return (
     <div className="min-h-screen bg-white p-8" style={{ backgroundImage: 'linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
@@ -292,6 +360,28 @@ export default function BusinessCardGenerator() {
                 </Select>
               </div>
 
+              <div className="grid gap-2 p-4 border-2 border-black bg-gray-50">
+                <Label htmlFor="backgroundPattern" className="font-bold text-black uppercase text-xs tracking-wide">Background Pattern</Label>
+                <Select
+                  value={cardData.backgroundPattern}
+                  onValueChange={(value) => handleInputChange('backgroundPattern', value)}
+                >
+                  <SelectTrigger className="border-2 border-black font-bold">
+                    <SelectValue placeholder="Select a pattern" />
+                  </SelectTrigger>
+                  <SelectContent className="border-2 border-black">
+                    <SelectItem value="none">None</SelectItem>
+                    <SelectItem value="dots">Dots</SelectItem>
+                    <SelectItem value="grid">Grid</SelectItem>
+                    <SelectItem value="diagonal">Diagonal Lines</SelectItem>
+                    <SelectItem value="hexagon">Hexagons</SelectItem>
+                    <SelectItem value="waves">Waves</SelectItem>
+                    <SelectItem value="circuit">Circuit</SelectItem>
+                    <SelectItem value="subtle">Subtle Texture</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="border-t-4 border-black pt-6 mt-6 bg-gray-100 p-4">
                 <div className="flex gap-4 justify-center">
                   <Button 
@@ -329,7 +419,10 @@ export default function BusinessCardGenerator() {
                       ${currentTheme.bg} ${currentTheme.text} ${currentTheme.border}
                       relative overflow-hidden
                     `}
-                    style={{ fontFamily: 'Arial, sans-serif' }}
+                    style={{ 
+                      fontFamily: 'Arial, sans-serif',
+                      ...currentPattern.style
+                    }}
                   >
                     {/* Background Pattern */}
                     <div className="absolute inset-0 opacity-5">
