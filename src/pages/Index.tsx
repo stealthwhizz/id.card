@@ -474,6 +474,7 @@ export default function BusinessCardGenerator() {
                   <li>• PNG format is perfect for digital use</li>
                   <li>• PDF format is ideal for professional printing</li>
                   <li>• Try different themes to match your brand</li>
+                  <li>• Background patterns add visual appeal while maintaining readability</li>
                 </ul>
               </CardContent>
             </Card>
